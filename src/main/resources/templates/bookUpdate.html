@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #picture-img {
+            width: 200px;
+            height: auto;
+        }
+        .status {
+            margin-right: 0;
+        }
+        label {
+            margin: .5em 0;
+        }
+    </style>
+    <script type="text/javascript">
+        async function uploadImg() {
+            const elem = document.querySelector("#avatar-file")
+            if (elem.files.length === 0) return false
+            const file = elem.files[0]
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            const url = await new Promise((res, rej) => reader.onloadend = () => res(reader.result))
+            console.log(url)
+            document.querySelector("#picture").value = url
+            document.querySelector("#picture-img").src = url
+            return true
+        }
+        function toUpload(){
+            let up = document.getElementById("avatar-file");
+            up.click();
+        }
+        function beforeSubmit() {
+            uploadImg()
+            document.querySelector('#price').value *= 100
+        }
+    </script>
+</head>
+<body layout:fragment="content">
+<div class="container-center content">
+    <form action="/book/save" method="post" enctype="multipart/form-data" onsubmit="beforeSubmit()">
+        <input type="hidden" id="id" name="id" th:value="${id}">
+        <label>
+            书名：<input type="text" name="name" id="name" class="form-control">
+        </label><br>
+        <label>
+            书类：
+            <select name="type" id="type" class="form-select"></select>
+        </label><br>
+        <label>
+            作者：
+            <input type="text" name="author" id="author" class="form-control">
+        </label><br>
+        <label>
+            出版社：
+            <input type="text" name="publishinghouse" id="publishinghouse" class="form-control">
+        </label><br>
+        <label>
+            价格：<input type="text" name="price" id="price" class="form-control">
+        </label><br>
+        <label>
+            图片：<input type="button" id="toUp" class="btn btn-primary" onclick="toUpload()" value="上传图片 ">
+            <input type="file" hidden="hidden" id="avatar-file" accept="image/*" onchange="uploadImg()">
+        </label><br>
+        <div>
+            <input type="hidden" name="picture" id="picture">
+            <img src="" id="picture-img" class="card-img">
+        </div>
+        <label>
+            简介：<input type="text" name="text" id="text" class="form-control">
+        </label><br>
+        <label>
+            商品库存：<input type="text" name="num" id="num" class="form-control">
+        </label><br>
+        <input id="submit" type="submit" value="修改" class="btn btn-primary">
+    </form>
+</div>
+    <script type="text/javascript">
+        (async () => {
+            const type = document.querySelector("#type");
+            const typeRes = await fetch("/type/getTypes")
+            const types = await typeRes.json()
+
+            types.forEach(e => {
+                let element = document.createElement('option')
+                element.value = e.id
+                element.innerText = e.name
+                element.className = 'form-text'
+                type.append(element)
+            })
+
+            let id = document.querySelector("#id").value
+            if (!id) {
+                document.querySelector("#id").value = 0
+                document.querySelector("#submit").value = "新增"
+                return
+            }
+            const res = await fetch(`/book/get?id=${id}`)
+            const commodity = await res.json()
+            document.querySelector("#name").value = commodity.name
+            document.querySelector("#price").value = commodity.price / 100
+            document.querySelector("#author").value = commodity.author
+            document.querySelector("#publishinghouse").value = commodity.publishinghouse
+            document.querySelector("#text").value = commodity.text
+            document.querySelector("#picture").value = commodity.picture
+            document.querySelector("#picture-img").src = commodity.picture
+            
+        })()
+    </script>
+</body>
+</html>

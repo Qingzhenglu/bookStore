@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script type="text/javascript">
+        (async () => {
+            const res = await fetch("/type/getTypes")
+            const types = (await res.json())
+
+            const html = (await Promise.all(types.map(async t => {
+                const contains = await fetch(`/book/containsType?id=${t.id}`)
+
+                let disabled = "disabled=\"disabled\""
+                if (await contains.json())
+                    disabled = ""
+
+                return (
+                `<tr class="card-sub">
+                    <td style="text-align: center;">${t.id}</td>
+                    <td style="text-align: center;">${t.name}</td>
+                    <td style="text-align: center;width: 200px;">
+                        <button style="" class="btn btn-warning" onclick="upd(${t.id})">修改</button>
+                        <button style="" ${disabled} class="btn btn-danger" onclick="del(${t.id})">删除</button>
+                    </td>
+                </div></tr>`)
+            }))).join("")
+            document.querySelector("table").innerHTML += html
+        })()
+
+        function add(){
+            location.href="/type/add"
+        }
+        function del(id){
+            location.href="/type/del?id="+id
+        }
+        function upd(id){
+            location.href="/type/update?id="+id
+        }
+    </script>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            /*background: url("") no-repeat;*/
+            background-size: cover;
+        }
+        .th{
+            height: 50px;
+        }
+        td {
+            padding: 1em 1em;
+        }
+        .card{
+            background: rgba(255, 255, 255, 0.1);
+            margin: auto;
+            overflow: hidden;
+            background: #F5F5F5;
+            box-shadow: 5px 5px 15px rgba(186, 126, 126, 0.6);
+            border-radius: 10px;
+        }
+
+        .card:hover {
+            box-shadow: 10px 10px 20px rgba(186, 126, 126, 0.6);
+        }
+        
+        .card-body {
+            padding: 10px;
+            border-radius: 20px;
+            background: #ffffff;
+            width: 100%;
+        }
+        
+        .card-table {
+            word-break: break-all;
+            margin-left: 3px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .card-sub{
+            background: #ffffff;
+            height: 150px;
+            border-radius: 5px;
+            outline: 0;
+        }
+        
+        .card-sub:hover{
+            outline: 2px ridge rgba(186, 126, 126, 0.6);
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-form" layout:fragment="content">
+    <button type="button"
+            onclick="add()"
+            class="btn btn-primary" style="text-align: center;">
+        新增</button>
+    <div class="card">
+        <div class="card-body">
+            <table class="card-table">
+                <thead>
+                <tr style="color: #BA7E7E;text-align: center;background: #f5f7f8;">
+                    <th class="th">
+                        类别id
+                    </th>
+                    <th class="th">
+                        类别名称
+                    </th>
+                    <th class="th">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

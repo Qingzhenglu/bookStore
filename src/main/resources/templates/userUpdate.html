@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #avatar-img {
+            width: 50px;
+            height: auto;
+        }
+        .form-check-inline {
+            margin-right: 0;
+        }
+        label {
+            margin: .5em 0;
+        }
+    </style>
+    <script type="text/javascript">
+        async function uploadImg() {
+            const elem = document.querySelector("#avatar-file")
+            if (elem.files.length === 0) return false
+            const file = elem.files[0]
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            const url = await new Promise((res, rej) => reader.onloadend = () => res(reader.result))
+            console.log(url)
+            document.querySelector("#avatar").value = url
+            document.querySelector("#avatar-img").src = url
+            return true
+        }
+        function toUpload(){
+            let up = document.getElementById("avatar-file");
+            up.click();
+        }
+    </script>
+</head>
+<body layout:fragment="content">
+<div class="container-center content">
+    <form action="/saveUser" method="post" enctype="multipart/form-data" onsubmit="uploadImg()">
+        <input type="hidden" id="id" name="id" th:value="${id}">
+        <label style="display: none" id="passwordLabel">
+            密码：<input type="text" id="password" name="password"><br>
+        </label>
+        <label>
+            姓名：<input type="text" name="name" id="name" class="form-control">
+        </label><br>
+        <span>
+            性别: <label><input type="radio" value="男" name="sex" class="sex form-check-input"> 男</label>
+                <label><input type="radio" value="女" name="sex" class="sex form-check-input"> 女</label>
+        </span><br>
+        <label>
+            年龄：<input type="number" name="age" id="age" class="form-control">
+        </label><br>
+        <label>
+            简介：<textarea name="text" id="text" class="form-control"></textarea>
+        </label><br>
+        <label>
+            头像：<input style="display: none" type="file" id="avatar-file" accept="image/*" onchange="uploadImg()">
+            <input type="button" id="toUp" class="btn btn-primary" onclick="toUpload()" value="上传">
+        </label><br>
+        <input type="hidden" name="avatar" id="avatar">
+        <img src="" id="avatar-img">
+        <input id="submit" type="submit" value="修改" class="btn btn-primary">
+    </form>
+</div>
+    <script type="text/javascript">
+        (async () => {
+            let id = document.querySelector("#id").value
+            if (!id) {
+                document.querySelector("#id").value = 0
+                document.querySelector("#submit").value = "新增"
+                document.querySelector("#passwordLabel").hidden = ""
+                return
+            }
+            const res = await fetch(`/getUserById?id=${id}`)
+            const user = await res.json()
+            document.querySelector("#password").value = user.password
+            document.querySelector("#name").value = user.name
+            document.querySelector("#age").value = user.age
+            document.querySelector("#text").value = user.text
+            document.querySelector("#avatar").value = user.avatar
+            document.querySelector("#avatar-img").src = user.avatar
+
+            document.querySelectorAll(".sex").forEach(e => {
+                if(e.value === user.sex)
+                    e.checked = true
+            })
+
+            document.querySelectorAll(".hobby").forEach(e => {
+                if(user.hobby.find(h => h === e.value))
+                    e.checked = true
+            })
+
+        })()
+    </script>
+</body>
+</html>

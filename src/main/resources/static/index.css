@@ -1,0 +1,59 @@
+.movie_cover {
+    width: 100%;
+    height: auto;
+    background-size: auto;
+}
+
+.card-item:hover {
+    box-shadow: 0 0 0 4px #ff900040;
+}
+
+.card-item:focus {
+    box-shadow: 0 0 8px 5px #ff900080;
+}
+
+.card-item {
+    width: 100%;
+    margin: 30px auto;
+    /*display: flex;*/
+    flex-direction: column;
+    justify-content: space-between;
+    break-inside: avoid;
+    box-shadow: 0 0 0 1px #ced4da;
+    outline: 0;
+    border-radius: 21px;
+    transition: box-shadow .15s ease-in-out;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.card-item:first-child {
+    margin-top: 0;
+}
+
+.card-item:last-child {
+    margin-bottom: 0;
+}
+
+.item-text {
+    margin: .5em;
+}
+
+.text-price {
+    color: #ff5000;
+}
+
+.container-index {
+    width: 90%;
+    margin: auto;
+    /*display: grid;*/
+    grid-template-columns: repeat(auto-fit, 300px);
+    grid-gap: 30px;
+    column-gap: 30px;
+    row-gap: 30px;
+    justify-content: center;
+    align-content: center;
+    align-items: stretch;
+    justify-items: center;
+    column-width: 250px;
+}

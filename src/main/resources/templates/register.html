@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/site.css">
+    <style>
+        body {
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .block {
+            max-width: 500px;
+            margin-left:600px;
+            margin-top: 200px;
+            text-align: center;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="block">
+    <form class="container-center" action="/saveUser">
+        <h1 style="margin-bottom: 20px; margin-top: 20px">注册</h1>
+        <p style="display: grid; grid-gap: 10px; grid-template-rows: 1fr 1fr; grid-template-columns: 1fr 4fr">
+            <label>用户名:</label><input class="form-control" name="name" id="name"/>
+            <label>密码:</label><input class="form-control" name="password" id="password" type="password"/>
+        </p>
+        <p>
+            <input type="submit" class="btn btn-primary" value="注册"/>
+        </p>
+    </form>
+</div>
+</body>
+</html>

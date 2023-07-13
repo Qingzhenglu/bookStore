@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body id="navbar">
+<div class="top-row-navbar ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/index" tabindex="-1">小书店</a>
+        <button title="Navigation menu" class="navbar-toggler">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <a class="nav-link" href="/index" >
+                <span class="oi"><i class="fas fa-home"></i></span> 主页
+            </a>
+        </div>
+        <div class="nav-item px-3">
+            <a class="nav-link" href="/book/manage" >
+                管理书籍
+            </a>
+        </div>
+        <div class="nav-item px-3">
+            <a class="nav-link" href="/type/index" >
+                管理类别
+            </a>
+        </div>
+        <div class="nav-item px-3">
+            <a class="nav-link" href="/usersInfo" >
+                管理用户
+            </a>
+        </div>
+    </nav>
+</div>
+<script>
+    (async () => {
+        const res = await fetch('/type/getTypes')
+        const types = await res.json()
+        const nav = document.querySelector('nav')
+        types.forEach(type => {
+            const elem = document.createElement('div')
+            elem.className = "nav-item px-3"
+            elem.innerHTML = `
+                <a class="nav-link" href="/type/${type.id}" >
+                    <span class="oi"><i class="fas"></i></span> ${type.name}
+                </a>
+            `
+            nav.append(elem)
+        })
+        document.querySelectorAll('.nav-link').forEach(e => {
+            if (e.href === document.location.origin + document.location.pathname)
+                e.classList.add('active')
+        })
+    })()
+</script>
+</body>
+</html>

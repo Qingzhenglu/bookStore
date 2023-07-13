@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>网上书店</title>
+    <link rel="stylesheet" th:href="@{/static/index.css}">
+    
+</head>
+<body >
+    <div layout:fragment="content">
+    
+    
+    <div>
+        <h1 th:if="${books.isEmpty()}" class="container-center">找不到商品...</h1>
+        <div th:unless="${books.isEmpty()}" class="container-index">
+            <div class="card-item" th:each="m : ${books}">
+                <p>
+                    <img class="movie_cover" tabindex="0"
+                     th:src="${m.getPicture()} "
+                     th:alt="'Cover of ' + ${m.getName()}"/>
+                </p>
+                <div class="item-text">
+                    <div th:text="${m.getName()}"></div>
+                        <h4 class="d-flex justify-content-between align-items-baseline">
+                            <b class="text-price" th:with="num = ${m.getPrice()} / 100."
+                               th:utext="${#numbers.formatCurrency(num)}"></b>
+                            <small class="text-secondary px-1 h6">
+                                <span class="px-2" th:text="'库存: ' + ${m.getNum()}"></span>
+                                <span th:text="${typeMap.get(m.getType())}"></span>
+                            </small>
+                        </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

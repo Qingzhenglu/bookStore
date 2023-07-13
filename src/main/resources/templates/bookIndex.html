@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript">
+        (async () => {
+            const res = await fetch("/book/list")
+            const commodity = (await res.json())
+
+            const html = commodity.map(c => {
+                let img = ""
+                if (c.picture) {
+                    img = `<img width="auto" height="32px" class="picture" src="${c.picture}" alt="">`
+                }
+                return (
+                `<tr class="card-sub">
+                    <td><input type="checkbox" class="form-check-input" name="id" value="${c.id}"/></td>
+                    <td style="text-align: center;">${c.name}</td>
+                    <td style="width: 80px;text-align: center;">${c.price/100}</td>
+                    <td>${img}</td>
+                    <td style="width: 80px;text-align: center;">${c.author}</td>
+                    <td style="width: 80px;text-align: center;">${c.num}</td>
+                    <td style="text-align: center;width: 160px;">
+                        <p><button type="button" style="" class="btn btn-warning" onclick="upd(${c.id})">修改</button></p>
+                        <button type="button" style="" class="btn btn-danger" onclick="del(${c.id})">删除</button>
+                    </td>
+                </div></tr>`)
+            }).join("")
+            document.querySelector("table").innerHTML += html
+        })()
+
+        function add(){
+            location.href="/book/add"
+        }
+        function del(id){
+            location.href="/book/del?id="+id
+        }
+        function upd(id){
+            location.href="/book/upd?id="+id
+        }
+    </script>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            /*background: url("") no-repeat;*/
+            background-size: cover;
+        }
+        .th{
+            height: 50px;
+        }
+        td {
+            padding: 1em 1em;
+        }
+        .card{
+            background: rgba(255, 255, 255, 0.1);
+            margin: auto;
+            overflow: hidden;
+            background: #F5F5F5;
+            box-shadow: 5px 5px 15px rgba(186, 126, 126, 0.6);
+            border-radius: 10px;
+        }
+
+        .card:hover {
+            box-shadow: 10px 10px 20px rgba(186, 126, 126, 0.6);
+        }
+        
+        .card-body {
+            padding: 10px;
+            border-radius: 20px;
+            background: #ffffff;
+        }
+        
+        .card-table {
+            word-break: break-all;
+            margin-left: 3px;
+            border-collapse: collapse;
+        }
+
+        .card-sub{
+            background: #ffffff;
+            height: 150px;
+            border-radius: 5px;
+            outline: 0;
+        }
+        
+        .card-sub img{
+            border-radius: 5px;
+            width: 100px;
+            height: auto;
+        }
+        
+        .card-sub:hover{
+            outline: 2px ridge rgba(186, 126, 126, 0.6);
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-form" layout:fragment="content">
+    <div class="card" id="app">
+        <form class="card-body" action="/book/dels">
+            <button type="button"
+                    onclick="add()"
+                    class="btn btn-primary" style="text-align: center;">
+                新增</button>
+            <input type="submit"
+                    class="btn btn-danger" style="text-align: center;" value="批量删除"/>
+            <table class="card-table" cellspacing="">
+                <thead>
+                <tr style="color: #BA7E7E;text-align: center;background: #f5f7f8;">
+                    <th class="th"></th>
+                    <th class="th">
+                        书名
+                    </th>
+                    <th class="th">
+                        价格
+                    </th>
+                    <th class="th">
+                        图片
+                    </th>
+                    <th class="th">
+                        作者
+                    </th>
+                    <th class="th" style="width: 50px;">
+                        库存
+                    </th>
+                    <th class="th">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </form>
+    </div>
+</div>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+
+</script>
+</body>
+</html>

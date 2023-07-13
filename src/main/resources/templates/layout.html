@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/static/site.css}">
+    <link rel="stylesheet" th:href="@{/static/layout.css}">
+    <link th:href="@{/static/navbar.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <script type="text/javascript">
+        (async () => {
+            const divs = document.getElementsByClassName("bt")
+            const paramsStr = window.location.search
+            const params = new URLSearchParams(paramsStr)
+            const id = parseInt(params.get('id'))
+            const res = await fetch(`/getUserById?id=${id}`)
+            const user = await res.json()
+            name = user.name
+            console.log(name)
+            if (id >= 0){
+                document.getElementById("s1").text = name
+                document.getElementById("s1").href = ''
+                document.getElementById("s1").class = ''
+                document.getElementById("s2").text = "退出"
+                document.getElementById("s2").href = "/index"
+            }
+
+        })()
+        
+
+    
+    </script>
+</head>
+<body>
+<div class="page">
+    <div class="sidebar" th:insert="navbar :: #navbar">
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <div class="bt" >
+                <span>
+                    <a class="btn btn-dark" id="s1" href="/login">登录</a>
+                </span>
+                <span class="px-2">
+                    <a class="btn btn-outline-dark" id="s2" href="/register">注册</a>
+                </span>
+            </div>
+        </div>
+        
+        <p layout:fragment="content"></p>
+    </main>
+</div>
+</body>
+</html>

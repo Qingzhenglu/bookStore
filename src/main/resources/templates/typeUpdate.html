@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #picture-img {
+            width: 200px;
+            height: auto;
+        }
+        .status {
+            margin-right: 0;
+        }
+        label {
+            margin: .5em 0;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+<div class="container-center content">
+    <form action="/type/save" method="post" enctype="multipart/form-data" onsubmit="uploadImg()">
+        <input type="hidden" id="id" name="id" th:value="${id}">
+        <label>
+            类别名称：<input type="text" name="name" id="name" class="form-control">
+        </label>
+        <input id="submit" type="submit" value="修改" class="btn btn-primary">
+    </form>
+</div>
+    <script type="text/javascript">
+        (async () => {
+            let id = document.querySelector("#id").value
+            if (!id) {
+                document.querySelector("#id").value = -1
+                document.querySelector("#submit").value = "新增"
+                return
+            }
+            const res = await fetch(`/type/getType?id=${id}`)
+            const type = await res.json()
+            document.querySelector("#name").value = type.name
+        })()
+    </script>
+</body>
+</html>

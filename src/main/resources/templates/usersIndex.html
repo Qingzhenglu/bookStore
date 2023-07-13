@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .avatar {
+            width: 50px;
+            height: auto;
+        }
+    </style>
+    <script type="text/javascript" th:src= "@{/static/jquery.js}"></script>
+    <script type="text/javascript">
+        (async () => {
+            const res = await fetch("/getUserList")
+            const users = (await res.json())
+
+            const html = users.map(user => {
+                let img = ""
+                if (user.avatar) {
+                    img = `<img class="avatar" src="${user.avatar}" alt="">`
+                }
+                return (
+                `<tr class="card-sub">
+                    <td>${img}</td>
+                    <td>${user.name}</td>
+                    <td>${user.sex}</td>
+                    <td>${user.age}</td>
+                    <td>${user.text}</td>
+                    <td>
+                        <p><button onclick="upd(${user.id})" class='upd btn btn-warning'>修改</button></p>
+                        <button onclick="del(${user.id})" class='del btn btn-danger'>删除</button>
+                    </td>
+                </tr>`)
+            }).join("")
+            $("table").append(html)
+        })()
+        function upd(id) {
+            location.href=`/upd?id=${id}`
+        }
+        function del(id) {
+            location.href=`/del?id=${id}`
+        }
+        function add() {
+            location.href="/add"
+        }
+    </script>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            /*background: url("") no-repeat;*/
+            background-size: cover;
+        }
+        th{
+            height: 50px;
+            width: 100px;
+        }
+        td {
+            padding: 1em 1em;
+            text-align: center;
+        }
+        .card{
+            background: rgba(255, 255, 255, 0.1);
+            margin: auto;
+            overflow: hidden;
+            background: #F5F5F5;
+            box-shadow: 5px 5px 15px rgba(186, 126, 126, 0.6);
+            border-radius: 10px;
+        }
+
+        .card:hover {
+            box-shadow: 10px 10px 20px rgba(186, 126, 126, 0.6);
+        }
+        
+        .card-body {
+            padding: 10px;
+            border-radius: 20px;
+            background: #ffffff;
+            width: 100%;
+        }
+        
+        .card-table {
+            word-break: break-all;
+            margin-left: 3px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .card-sub{
+            background: #ffffff;
+            height: 150px;
+            border-radius: 5px;
+            outline: 0;
+        }
+        
+        .card-sub img{
+            border-radius: 5px;
+            width: 100px;
+            height: auto;
+        }
+        
+        .card-sub:hover{
+            outline: 2px ridge rgba(186, 126, 126, 0.6);
+            border-radius: 1rem;
+        }
+</style>
+</head>
+
+<body>
+    <div class="container-form" layout:fragment="content">
+        <button onclick="add()" class="add btn btn-primary">新增</button>
+        <div class="card">
+            <div class="card-body">
+                <table class="card-table" style="width: 100%">
+                    <tr style="color: #BA7E7E;text-align: center;background: #f5f7f8;">
+                        <th>头像</th>
+                        <th>姓名</th>
+                        <th>年龄</th>
+                        <th>性别</th>
+                        <th>简介</th>
+                        <th>操作</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
